@@ -1,0 +1,60 @@
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(CIDADAO)
+  resetToken String?
+  resetTokenExpiry DateTime?
+  createdAt DateTime @default(now())
+  complaints Complaint[]
+}
+
+enum Role {
+  CIDADAO
+  FUNCIONARIO
+  ADMIN
+}
+
+model Complaint {
+  id          String   @id @default(uuid())
+  type        ComplaintType
+  description String
+  address     String?
+  imageUrl    String?
+  status      Status   @default(PENDENTE)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+enum ComplaintType {
+  FOCOS_DENGUE
+  ANIMAIS_RISCO
+  RESTAURANTE_INSALUBRE
+  ILPI_IRREGULAR   // Instituição de Longa Permanência para Idosos
+  OUTROS
+}
+
+enum Status {
+  PENDENTE
+  EM_ANALISE
+  RESOLVIDO
+  REJEITADO
+}
+
+model News {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  category  NewsCategory
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+enum NewsCategory {
+  CAMPANHA_VACINACAO
+  ALERTA_SAZONAL
+  INFORMATIVO
+  OUTROS
+}
