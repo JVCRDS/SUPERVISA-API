@@ -12,12 +12,12 @@ const validarDadosUser = (
 ): string[] => {
   const erros: string[] = [];
 
-  if (!dados.nome) erros.push('O campo "nome" é obrigatório.');
-  if (!dados.email) erros.push('O campo "email" é obrigatório.');
-  if (!dados.cpf) erros.push('O campo "cpf" é obrigatório.');
-  if (!dados.senha) erros.push('O campo "senha" é obrigatório.');
-  if (!dados.endereco) erros.push('O campo "endereco" é obrigatório.');
-  if (!dados.cep) erros.push('O campo "cep" é obrigatório.');
+  if (!dados.nome && checarExistencia) erros.push('O campo "nome" é obrigatório.');
+  if (!dados.email && checarExistencia) erros.push('O campo "email" é obrigatório.');
+  if (!dados.cpf && checarExistencia) erros.push('O campo "cpf" é obrigatório.');
+  if (!dados.senha && checarExistencia) erros.push('O campo "senha" é obrigatório.');
+  if (!dados.endereco && checarExistencia) erros.push('O campo "endereco" é obrigatório.');
+  if (!dados.cep && checarExistencia) erros.push('O campo "cep" é obrigatório.');
   
 
   if (dados.email && !dados.email.includes('@')) {
@@ -28,11 +28,11 @@ const validarDadosUser = (
     erros.push('CPF inválido. Deve conter 11 dígitos numéricos.');
   }
 
-  if (checarExistencia && dados.email) {
+  if (dados.email) {
     const emailExiste = users.some(user => user.email === dados.email);
     if (emailExiste) erros.push('Email já cadastrado.');
   }
-  if (checarExistencia && dados.cpf) {
+  if (dados.cpf) {
     const cpfExiste = users.some(user => user.cpf === dados.cpf);
     if (cpfExiste) erros.push('CPF já cadastrado.');
   }
@@ -54,13 +54,13 @@ export const createUser = (dados: Omit<User, 'id'>): { user: User; erros: string
   };
 
   users.push(novoUser);
+  
   return { user: novoUser, erros: [] };
 };
 
 export const findAllUsers = (): User[] => {
   return users;
 };
-
 
 export const findUserById = (id: string): User | null => {
   return users.find((user) => user.id === id) || null;
