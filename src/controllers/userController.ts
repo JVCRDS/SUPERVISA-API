@@ -36,3 +36,36 @@ export const getUserById = (req: Request, res: Response): void => {
 
   res.status(200).json(result);
 } 
+
+export const updateUserById = (req: Request, res: Response): void => {
+  const { id } = req.params;
+  const { user, erros } = req.body;
+  const result = userService.updateUser(id, user);
+
+  if (erros.length > 0) {
+    res.status(400).json({ erros });
+    return;
+  } 
+
+  if (!result.user) {
+    res.status(404).json("Usuário não encontrado");
+    return;
+  } 
+
+
+  
+
+  res.status(200).json("Usuário atualizado com sucesso");
+}
+
+export const deleteUserById = (req: Request, res: Response): void => {
+  const { id } = req.params;
+  const result = userService.deleteUser(id);
+
+  if (!id) {
+    res.status(404).json("Usuário não encontrado");
+    return;
+  }
+
+  res.status(200).json(result.mensagem);
+}
